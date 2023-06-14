@@ -2,15 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 4.0f;
-    private UIManager _uimanager;
-    
+    private UIManager _uimanager; 
     private Player _player;
-
     private Animator _EnemyExplodeAnim;
+    private AudioSource _audiosource;
+    private float _fireRate = 3.0f;
+    private float _canFire = -1;
+    [SerializeField]
+    private GameObject _enemyLaserPrefab;
+    [SerializeField]
+    private AudioClip _laseraudio;
+
 
     void Start()
     {
@@ -25,9 +33,31 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explode is null");
         }
+        _audiosource = GetComponent<AudioSource>();
+
     }
 
     void Update()
+    {
+        movement();
+
+        if(Time.time > _canFire && this.gameObject != null)
+        {
+            _fireRate = UnityEngine.Random.Range(3.0f, 7.0f);
+            _canFire = Time.time + _fireRate;
+            GameObject enemyLaser = Instantiate(_enemyLaserPrefab,new Vector3(transform.position.x - 0.19f,transform.position.y + 0.1f,0), Quaternion.identity);
+            Lasser[] lassers = enemyLaser.GetComponentsInChildren<Lasser>();
+            for( int i = 0; i < lassers.Length; i++ )
+            {
+                lassers[i].AssignEnemyLaser();
+                _audiosource.clip = _laseraudio;
+                _audiosource.Play();
+            }
+        }
+       
+    }
+
+    void movement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if(transform.position.y < -5.0f & _player != null)
@@ -37,33 +67,38 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D Other)
+    void OnTriggerEnter2D(Collider2D Other)
     {
         
         if(Other.tag == "Player")
+        {
+            //Player player = Other.transform.GetComponent<Player>();
+            if (_player != null)
             {
-                //Player player = Other.transform.GetComponent<Player>();
-                if (_player != null)
-                {
-                    _player.Damage();  
-                }
-                
-                _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
-                _speed = 1.0f;
-                Destroy(this.gameObject, 2.3f);
+                _player.Damage();  
             }
+            
+            _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
+            _speed = 0.0f;
+            _audiosource.Play();
+            Destroy(GetComponent<Collider2D>());
+            
+            Destroy(this.gameObject, 2.8f);
+        }
         if(Other.tag == "Laser")
-            {
-                if(_player != null)
-                    {
-                        //player.UpdateScore(); //it does not work - Object reference not set to an instance of an object.
-                        _player.UpdateScore(10); //Question about the reference to an object.
-                    }
-                
-                _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
-                _speed = 1.0f;
-                Destroy(this.gameObject, 2.3f);
-                Destroy(Other.gameObject);
-            }
+        {
+            if(_player != null)
+                {
+                    //player.UpdateScore(); //it does not work - Object reference not set to an instance of an object.
+                    _player.UpdateScore(10); //Question about the reference to an object.
+                }
+            
+            _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
+            _speed = 0.0f;
+            _audiosource.Play();
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 1.3f);
+            Destroy(Other.gameObject);
+        }
     }
 }

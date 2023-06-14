@@ -20,6 +20,11 @@ public class GameManagers : MonoBehaviour
         {
             SceneManager.LoadScene(1); //Space Shooter scene
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit(); //Space Shooter quit
+        }
     }
 
     public void GameOver()

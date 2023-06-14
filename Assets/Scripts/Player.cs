@@ -24,10 +24,23 @@ public class Player : MonoBehaviour
    [SerializeField]
    private int _score;
    private UIManager _uimanager;
+   [SerializeField]
+   private GameObject _leftDamage;
+   [SerializeField]
+   private GameObject _rightDamage;
+   [SerializeField]
+   private AudioClip _laseraudio;
+   private AudioSource _audiosource;
+   private int _countLaser = 0;
+   [SerializeField]
+   private GameObject _explosionPrefab;
+ 
 
     void Start()
     {
-        transform.position = new Vector3(0,0,0);
+        transform.position = new Vector3(0,-3,0);
+        _rightDamage.SetActive(false);
+        _leftDamage.SetActive(false);
         _spawnmanager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         //_spawnmanager = FindObjectOfType<SpawnManager>(); 
         if(_spawnmanager == null)
@@ -41,6 +54,17 @@ public class Player : MonoBehaviour
         {
             Debug.Log("The UI Manager is null");
         }
+
+        _audiosource = GetComponent<AudioSource>();
+        if(_audiosource == null)
+        {
+            Debug.LogError("The audiosource on the player is null");
+        }
+        else
+        {
+            _audiosource.clip = _laseraudio;
+        }
+
     }
     void Update()
     {
@@ -78,22 +102,33 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, _laserPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, 0) , Quaternion.identity); 
         }
+        _audiosource.Play();
     }
 
     public void Damage()
     {
         if(_isShieldActive == true)
-        {
-            return;
-        }
+            {
+                return;
+            }
 
         _lives --;
+        Debug.LogError("_lives is " + _lives);
         _uimanager.UpdateLives(_lives);
+        if(_lives == 2)
+            {
+                _rightDamage.SetActive(true);
+            }
+        else if(_lives == 1)
+            {
+                _leftDamage.SetActive(true);
+            }
 
         if (_lives == 0)
         {         
             _spawnmanager.OnPlayerDeath();
-            Destroy(this.gameObject);
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(this.gameObject,0.3f);
         }
         
     }
@@ -144,4 +179,33 @@ public class Player : MonoBehaviour
     }
     //Create a method to add 10 to the score
     //Communicate to the UIManager to update the score
+
+    private void OnTriggerEnter2D(Collider2D Other)
+    { 
+        if(Other.tag == "Laser")
+        {
+           _countLaser = _countLaser + 1;
+           //Debug.LogError(_countLaser);
+    
+            if (_countLaser < 2)
+            {
+                //Debug.LogError(_countLaser);
+            }
+            else if (_countLaser == 2)
+            {
+                Debug.LogError("The count is " + _countLaser);
+                Damage();
+                _countLaser = 0;
+            }
+        }
+
+    }
+
+
+
+
+
+
+
+
 }

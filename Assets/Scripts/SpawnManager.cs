@@ -16,8 +16,7 @@ public class SpawnManager : MonoBehaviour
     [SerializeField]
     private GameObject[] _powerUps;
 
-    
-    void Start()
+    public void startspawning()
     {
         StartCoroutine(SpawnEnemyRoutine());
         StartCoroutine(SpawnPowerUpRoutine());
@@ -25,7 +24,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnEnemyRoutine()
     {
-        while (_stopSpawning == false) 
+       yield return new WaitForSeconds(3.0f);
+       while (_stopSpawning == false) 
         {
             Vector3 _enemyPos = new Vector3(UnityEngine.Random.Range(-8f, 8f), 8.0f, 0);
             GameObject newEnemy = Instantiate(_enemyPrefab, _enemyPos, Quaternion.identity);  
@@ -36,7 +36,8 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerUpRoutine()
     {
-        while (_stopSpawning == false)  
+       yield return new WaitForSeconds(3.0f);
+       while (_stopSpawning == false)  
         {
             Vector3 _powerUpPos = new Vector3(UnityEngine.Random.Range(-8f, 8f), 8.0f, 0);
             int randomPowerUp = UnityEngine.Random.Range(0,3);
