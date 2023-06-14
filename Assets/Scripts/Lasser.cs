@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Lasser : MonoBehaviour
 {
-    private float _laserSpeed = 8f; 
+    private float _laserSpeed = 13f; 
     private bool _isEnemyLaser = false;
 
     void Start()

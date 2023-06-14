@@ -30,6 +30,8 @@ public class Player : MonoBehaviour
    private GameObject _rightDamage;
    [SerializeField]
    private AudioClip _laseraudio;
+   [SerializeField]
+   private AudioClip _explodeAudio;
    private AudioSource _audiosource;
    private int _countLaser = 0;
    [SerializeField]
@@ -64,7 +66,7 @@ public class Player : MonoBehaviour
         {
             _audiosource.clip = _laseraudio;
         }
-
+        
     }
     void Update()
     {
@@ -95,13 +97,14 @@ public class Player : MonoBehaviour
       
         if (_istripeShootActive == true)
         {
-            Instantiate(_tripleShootPrefab, transform.position, Quaternion.identity);
+            Instantiate(_tripleShootPrefab, _tripleShootPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, 0), Quaternion.identity);
         }
 
         else
         {
             Instantiate(_laserPrefab, _laserPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, 0) , Quaternion.identity); 
         }
+        _audiosource.clip = _laseraudio;
         _audiosource.Play();
     }
 
@@ -113,7 +116,6 @@ public class Player : MonoBehaviour
             }
 
         _lives --;
-        Debug.LogError("_lives is " + _lives);
         _uimanager.UpdateLives(_lives);
         if(_lives == 2)
             {
@@ -186,6 +188,7 @@ public class Player : MonoBehaviour
         {
            _countLaser = _countLaser + 1;
            //Debug.LogError(_countLaser);
+           Destroy(Other.gameObject);
     
             if (_countLaser < 2)
             {
@@ -194,6 +197,8 @@ public class Player : MonoBehaviour
             else if (_countLaser == 2)
             {
                 Debug.LogError("The count is " + _countLaser);
+                _audiosource.clip = _explodeAudio;
+                _audiosource.Play();
                 Damage();
                 _countLaser = 0;
             }

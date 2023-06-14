@@ -53,6 +53,7 @@ MonoBehaviour:
   _speed: 2
   _enemyLaserPrefab: {fileID: 7280255550311180197, guid: 5ad99b4f58230b0468dab647dea1998e, type: 3}
   _laseraudio: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  _explodeAudio: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
 --- !u!212 &-2889151606210962501
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -276,11 +277,11 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7347945478502462856}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

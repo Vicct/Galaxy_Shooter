@@ -11,13 +11,16 @@ public class Enemy : MonoBehaviour
     private UIManager _uimanager; 
     private Player _player;
     private Animator _EnemyExplodeAnim;
-    private AudioSource _audiosource;
     private float _fireRate = 3.0f;
     private float _canFire = -1;
     [SerializeField]
     private GameObject _enemyLaserPrefab;
     [SerializeField]
     private AudioClip _laseraudio;
+    [SerializeField]
+    private AudioClip _explodeAudio;
+    private AudioSource _audiosource;
+
 
 
     void Start()
@@ -80,6 +83,7 @@ public class Enemy : MonoBehaviour
             
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
+            _audiosource.clip = _explodeAudio;
             _audiosource.Play();
             Destroy(GetComponent<Collider2D>());
             
@@ -95,6 +99,7 @@ public class Enemy : MonoBehaviour
             
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
+            _audiosource.clip = _explodeAudio;
             _audiosource.Play();
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 1.3f);
