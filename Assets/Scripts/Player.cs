@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
    private float _canFire = -1f;
    [SerializeField]
    private int _lives = 3;
-   private SpawnManager _spawnmanager;
+   private SpawnManager _spawnManager;
    [SerializeField]
    private GameObject _tripleShootPrefab;
    private bool _istripeShootActive = false;
@@ -23,16 +23,16 @@ public class Player : MonoBehaviour
    private GameObject _shielVisualizer;
    [SerializeField]
    private int _score;
-   private UIManager _uimanager;
+   private UIManager _uiManager;
    [SerializeField]
    private GameObject _leftDamage;
    [SerializeField]
    private GameObject _rightDamage;
    [SerializeField]
-   private AudioClip _laseraudio;
+   private AudioClip _laserAudio;
    [SerializeField]
    private AudioClip _explodeAudio;
-   private AudioSource _audiosource;
+   private AudioSource _audioSource;
    private int _countLaser = 0;
    [SerializeField]
    private GameObject _explosionPrefab;
@@ -43,28 +43,28 @@ public class Player : MonoBehaviour
         transform.position = new Vector3(0,-3,0);
         _rightDamage.SetActive(false);
         _leftDamage.SetActive(false);
-        _spawnmanager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
-        //_spawnmanager = FindObjectOfType<SpawnManager>(); 
-        if(_spawnmanager == null)
+        _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        //_spawnManager = FindObjectOfType<SpawnManager>(); 
+        if(_spawnManager == null)
         {
             Debug.Log("The Spawn Manager is null");
         }
 
-        //_uimanager = GameObject.Find("UIManager").GetComponent<UIManager>();
-        _uimanager = FindObjectOfType<UIManager>(); //What is the difference between those lines?
-        if(_uimanager == null)
+        //_uiManager = GameObject.Find("UIManager").GetComponent<UIManager>();
+        _uiManager = FindObjectOfType<UIManager>(); //What is the difference between those lines?
+        if(_uiManager == null)
         {
             Debug.Log("The UI Manager is null");
         }
 
-        _audiosource = GetComponent<AudioSource>();
-        if(_audiosource == null)
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null)
         {
             Debug.LogError("The audiosource on the player is null");
         }
         else
         {
-            _audiosource.clip = _laseraudio;
+            _audioSource.clip = _laserAudio;
         }
         
     }
@@ -104,8 +104,8 @@ public class Player : MonoBehaviour
         {
             Instantiate(_laserPrefab, _laserPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, 0) , Quaternion.identity); 
         }
-        _audiosource.clip = _laseraudio;
-        _audiosource.Play();
+        _audioSource.clip = _laserAudio;
+        _audioSource.Play();
     }
 
     public void Damage()
@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
             }
 
         _lives --;
-        _uimanager.UpdateLives(_lives);
+        _uiManager.UpdateLives(_lives);
         if(_lives == 2)
             {
                 _rightDamage.SetActive(true);
@@ -128,7 +128,7 @@ public class Player : MonoBehaviour
 
         if (_lives == 0)
         {         
-            _spawnmanager.OnPlayerDeath();
+            _spawnManager.OnPlayerDeath();
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject,0.3f);
         }
@@ -177,7 +177,7 @@ public class Player : MonoBehaviour
     public void UpdateScore(int points)
     {
         _score += points;
-        _uimanager.UpdateScorex(_score);
+        _uiManager.UpdateScorex(_score);
     }
     //Create a method to add 10 to the score
     //Communicate to the UIManager to update the score
@@ -197,8 +197,8 @@ public class Player : MonoBehaviour
             else if (_countLaser == 2)
             {
                 Debug.LogError("The count is " + _countLaser);
-                _audiosource.clip = _explodeAudio;
-                _audiosource.Play();
+                _audioSource.clip = _explodeAudio;
+                _audioSource.Play();
                 Damage();
                 _countLaser = 0;
             }

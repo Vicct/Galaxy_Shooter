@@ -7,9 +7,9 @@ public class Power_Up : MonoBehaviour
     [SerializeField]
     private float _powerUpSpeed = 3.0f;
     [SerializeField]
-    private int _powerupID;
+    private int _powerUpID;
     [SerializeField]
-    private AudioClip _powerUPaudioclip;
+    private AudioClip _powerUpaudioclip;
    
     // Update is called once per frame
     void Update()
@@ -26,11 +26,11 @@ public class Power_Up : MonoBehaviour
     {
         if(Other.tag == "Player")
         {
-            AudioSource.PlayClipAtPoint(_powerUPaudioclip, transform.position);
+            AudioSource.PlayClipAtPoint(_powerUpaudioclip, transform.position);
             Player player = Other.transform.GetComponent<Player>();
             if(player != null)
             {
-                switch(_powerupID)
+                switch(_powerUpID)
                 {
                     case 0:
                         player.TripleshotisActive();

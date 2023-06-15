@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 4.0f;
-    private UIManager _uimanager; 
+    private UIManager _uiManager; 
     private Player _player;
     private Animator _EnemyExplodeAnim;
     private float _fireRate = 3.0f;
@@ -16,10 +16,10 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject _enemyLaserPrefab;
     [SerializeField]
-    private AudioClip _laseraudio;
+    private AudioClip _laserAudio;
     [SerializeField]
     private AudioClip _explodeAudio;
-    private AudioSource _audiosource;
+    private AudioSource _audioSource;
 
 
 
@@ -36,7 +36,7 @@ public class Enemy : MonoBehaviour
         {
             Debug.LogError("The Enemy Explode is null");
         }
-        _audiosource = GetComponent<AudioSource>();
+        _audioSource = GetComponent<AudioSource>();
 
     }
 
@@ -53,8 +53,8 @@ public class Enemy : MonoBehaviour
             for( int i = 0; i < lassers.Length; i++ )
             {
                 lassers[i].AssignEnemyLaser();
-                _audiosource.clip = _laseraudio;
-                _audiosource.Play();
+                _audioSource.clip = _laserAudio;
+                _audioSource.Play();
             }
         }
        
@@ -83,8 +83,8 @@ public class Enemy : MonoBehaviour
             
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
-            _audiosource.clip = _explodeAudio;
-            _audiosource.Play();
+            _audioSource.clip = _explodeAudio;
+            _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             
             Destroy(this.gameObject, 2.8f);
@@ -99,8 +99,8 @@ public class Enemy : MonoBehaviour
             
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
-            _audiosource.clip = _explodeAudio;
-            _audiosource.Play();
+            _audioSource.clip = _explodeAudio;
+            _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject, 1.3f);
             Destroy(Other.gameObject);

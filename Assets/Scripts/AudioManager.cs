@@ -6,7 +6,7 @@ public class AudioManager : MonoBehaviour
 {
     [SerializeField]
     private AudioClip _explosion;
-    private AudioSource _audiosourceexplosion;
+    private AudioSource _audioSourceExplosion;
     
     // Start is called before the first frame update
     void Start()
@@ -16,13 +16,13 @@ public class AudioManager : MonoBehaviour
 
     public void Explosion()
     {
-       if (_audiosourceexplosion == null)
+       if (_audioSourceExplosion == null)
         {
             Debug.LogError("The explosion source is null");
         }
         else
         {
-            _audiosourceexplosion.clip = _explosion;
+            _audioSourceExplosion.clip = _explosion;
         }
     }
 
