@@ -42,7 +42,7 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        movement();
+        Movement();
 
         if(Time.time > _canFire && this.gameObject != null)
         {
@@ -60,7 +60,7 @@ public class Enemy : MonoBehaviour
        
     }
 
-    void movement()
+    void Movement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
         if(transform.position.y < -5.0f & _player != null)

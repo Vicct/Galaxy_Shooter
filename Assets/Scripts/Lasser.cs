@@ -55,16 +55,4 @@ public class Lasser : MonoBehaviour
         _isEnemyLaser = true;
     }
 
- /*   void OnTriggerEnter2D(Collider2D Other)
-    {
-        if (Other.tag == "Player" && _isEnemyLaser == true)
-        {
-            Player player = Other.GetComponent<Player>();
-            if(player != null)
-            {
-                player.Damage();
-            }
-        }
-    }
-*/
 }

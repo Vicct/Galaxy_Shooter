@@ -70,13 +70,13 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-        movements ();     
+        Movements ();     
         if(Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire) 
         {
             ShootLaser();
         }
     }
-    void movements ()
+    void Movements ()
     {
         float _HorizontalInput = Input.GetAxis("Horizontal");       
         float _VerticalInput = Input.GetAxis("Vertical");
