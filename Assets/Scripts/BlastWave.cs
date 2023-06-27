@@ -13,7 +13,7 @@ public class BlastWave : MonoBehaviour
     private LineRenderer _lineRenderer;
     [SerializeField]
     private float _startWidth;
-    private Player _player;
+
 
   
     private void Awake()

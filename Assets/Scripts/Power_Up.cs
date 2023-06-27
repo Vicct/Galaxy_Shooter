@@ -10,10 +10,10 @@ public class Power_Up : MonoBehaviour
     private int _powerUpID;
     [SerializeField]
     private AudioClip _powerUpaudioclip;
-
     [SerializeField]
     private GameObject _explosionPrefab;
-   
+    private Player _player;
+ 
     void Update()
     {
         transform.Translate(Vector3.down * _powerUpSpeed * Time.deltaTime);
@@ -55,6 +55,8 @@ public class Power_Up : MonoBehaviour
 
         if(Other.tag == "Laser" && _powerUpID == 5)
         {
+            Player _player = GameObject.Find("Player").GetComponent<Player>();
+            _player.ShieldisActive();
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(Other.gameObject);  
             Transform Bomb_Power_Up = transform;
