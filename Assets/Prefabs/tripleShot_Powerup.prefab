@@ -138,8 +138,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerUpSpeed: 1
-  _powerupID: 0
-  _powerUPaudioclip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _powerUpID: 0
+  _powerUpaudioclip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosionPrefab: {fileID: 8210638093207429773, guid: d68922990564a5e41b9e1789fb22b8e5, type: 3}
 --- !u!95 &567584567
 Animator:
   serializedVersion: 5

@@ -7,7 +7,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
-    private float _speed = 4.0f;
+    public float _speed = 4.0f;
     private UIManager _uiManager; 
     private Player _player;
     private Animator _EnemyExplodeAnim;
@@ -56,7 +56,10 @@ public class Enemy : MonoBehaviour
                 _audioSource.clip = _laserAudio;
                 _audioSource.Play();
             }
+
         }
+
+        if(Input.GetKeyDown(KeyCode.D)){BombDestroy();}
        
     }
 
@@ -89,7 +92,7 @@ public class Enemy : MonoBehaviour
             
             Destroy(this.gameObject, 2.8f);
         }
-        if(Other.tag == "Laser")
+        else if (Other.tag == "Laser")
         {
             if(_player != null)
                 {
@@ -105,5 +108,21 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject, 1.3f);
             Destroy(Other.gameObject);
         }
+
+    }
+
+    public void BombDestroy()
+    {
+        if(_player != null)
+            {
+                _player.UpdateScore(10); 
+            }
+        
+        _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
+        _speed = 0.0f;
+        _audioSource.clip = _explodeAudio;
+        _audioSource.Play();
+        Destroy(GetComponent<Collider2D>());
+        Destroy(this.gameObject, 1.3f);
     }
 }

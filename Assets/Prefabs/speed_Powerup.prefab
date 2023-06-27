@@ -101,8 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _powerUpSpeed: 1
-  _powerupID: 1
-  _powerUPaudioclip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _powerUpID: 1
+  _powerUpaudioclip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
+  _explosionPrefab: {fileID: 8210638093207429773, guid: d68922990564a5e41b9e1789fb22b8e5, type: 3}
 --- !u!50 &613273724164688741
 Rigidbody2D:
   serializedVersion: 4

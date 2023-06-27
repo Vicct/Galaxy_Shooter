@@ -6,11 +6,12 @@ public class GameManagers : MonoBehaviour
 {
     [SerializeField]
     private bool _isGameOver = false;
+
     
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -25,6 +26,7 @@ public class GameManagers : MonoBehaviour
         {
             Application.Quit(); //Space Shooter quit
         }
+
     }
 
     public void GameOver()

@@ -10,17 +10,18 @@ public class Power_Up : MonoBehaviour
     private int _powerUpID;
     [SerializeField]
     private AudioClip _powerUpaudioclip;
+
+    [SerializeField]
+    private GameObject _explosionPrefab;
    
-    // Update is called once per frame
     void Update()
     {
-        //Move down at speed of three
         transform.Translate(Vector3.down * _powerUpSpeed * Time.deltaTime);
-        // if out of screen destroy it.
         if(transform.position.y < -5.0f)
         {
             Destroy(this.gameObject);
         }
+
     }
     private void OnTriggerEnter2D(Collider2D Other)
     {
@@ -41,10 +42,29 @@ public class Power_Up : MonoBehaviour
                     case 2:
                         player.ShieldisActive();
                         break;
-            
+                    case 3:
+                        player.BulletsRefill();
+                        break;
+                    case 4:
+                        player.UnDamage();
+                        break;
                 }
             }
             Destroy(this.gameObject);
+        }
+
+        if(Other.tag == "Laser" && _powerUpID == 5)
+        {
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            Destroy(Other.gameObject);  
+            Transform Bomb_Power_Up = transform;
+            Transform Bomb_Effect = Bomb_Power_Up.GetChild(0);
+            BlastWave _blastWave = Bomb_Effect.GetComponent<BlastWave>();
+            if (_blastWave != null)
+            {
+                _blastWave.ExplodeBomb();
+            }
+            Destroy(this.gameObject, 0.9f);
         }
     }
 }

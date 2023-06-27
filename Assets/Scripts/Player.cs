@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
    [SerializeField]
    private float _speed = 3.5f;
    private float _speedMultiplier = 2.0f;
+   private float _turboSpeedMultiplier = 4.0f;
    [SerializeField]
    private GameObject _laserPrefab; 
    [SerializeField]
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
    private bool _istripeShootActive = false;
    private bool _isShieldActive = false;
    [SerializeField]
-   private GameObject _shielVisualizer;
+   private GameObject _shielVisualizer, _shielVisualizerMedium, _shielVisualizerHigh;
    [SerializeField]
    private int _score;
    private UIManager _uiManager;
@@ -36,13 +37,20 @@ public class Player : MonoBehaviour
    private int _countLaser = 0;
    [SerializeField]
    private GameObject _explosionPrefab;
- 
+   private int _shieldCount = 0;
+   private float _timeCoroutine = 5.0f;
+   private int _activeCoroutine = 1;
+   private int _bullets = 15;
+   
 
     void Start()
     {
         transform.position = new Vector3(0,-3,0);
         _rightDamage.SetActive(false);
         _leftDamage.SetActive(false);
+        _shielVisualizer.SetActive(false);
+        _shielVisualizerMedium.SetActive(false);
+        _shielVisualizerHigh.SetActive(false);
         _spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
         //_spawnManager = FindObjectOfType<SpawnManager>(); 
         if(_spawnManager == null)
@@ -66,7 +74,6 @@ public class Player : MonoBehaviour
         {
             _audioSource.clip = _laserAudio;
         }
-        
     }
     void Update()
     {
@@ -90,22 +97,29 @@ public class Player : MonoBehaviour
        {
           transform.position = new Vector3(transform.position.x,-5.0f, 0);
        }
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            SpeedBoostActive();
+        }
     }
     void ShootLaser()
     {
       _canFire = Time.time + _fireRate;
       
-        if (_istripeShootActive == true)
+        if (_istripeShootActive == true && _bullets >= 1)
         {
             Instantiate(_tripleShootPrefab, _tripleShootPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, 0), Quaternion.identity);
+            _bullets = _bullets - 3;
         }
 
-        else
+        else if (_bullets >= 1)
         {
             Instantiate(_laserPrefab, _laserPrefab.transform.position = new Vector3(transform.position.x, transform.position.y + 1.2f, 0) , Quaternion.identity); 
+            _bullets = _bullets - 1;
         }
         _audioSource.clip = _laserAudio;
         _audioSource.Play();
+        ShootCounter();
     }
 
     public void Damage()
@@ -117,6 +131,7 @@ public class Player : MonoBehaviour
 
         _lives --;
         _uiManager.UpdateLives(_lives);
+        _spawnManager.UpdateLives(_lives);
         if(_lives == 2)
             {
                 _rightDamage.SetActive(true);
@@ -134,6 +149,23 @@ public class Player : MonoBehaviour
         }
         
     }
+
+    public void UnDamage()
+    {
+        _lives = _lives + 1;
+        _uiManager.UpdateLives(_lives);
+        _spawnManager.UpdateLives(_lives);
+        if(_lives == 2)
+            {
+                _rightDamage.SetActive(false);
+            }
+        else if(_lives == 3)
+            {
+                _leftDamage.SetActive(false);
+            }
+        
+    }
+
     public void TripleshotisActive()
     {
         _istripeShootActive = true;
@@ -153,6 +185,24 @@ public class Player : MonoBehaviour
        StartCoroutine(SpeedBoostPowerDownCoroutine());
     }
 
+    void TurboSpeedBoostActive()
+    {
+       _speed *=_turboSpeedMultiplier;
+    }
+
+    public void BulletsRefill()
+    {
+        if (_bullets < 0)
+        {
+            _bullets = 0;
+            _bullets = _bullets + 30;
+        }
+        else
+        {
+            _bullets = _bullets + 30;
+        }
+    }
+
     IEnumerator SpeedBoostPowerDownCoroutine()
     {
         yield return new WaitForSeconds(5.0f);
@@ -162,32 +212,76 @@ public class Player : MonoBehaviour
 
     public void ShieldisActive()
     {
-        _isShieldActive = true;
-        _shielVisualizer.SetActive(true);
-        StartCoroutine(ShieldPowerDownCoroutine());
+
+       _shieldCount ++;
+       _activeCoroutine = 1;
+
+        if (_shieldCount == 1)
+        {
+            _shielVisualizer.SetActive(true);           
+            _shielVisualizerMedium.SetActive(false);
+            _shielVisualizerHigh.SetActive(false);
+            _isShieldActive = true;
+            StartCoroutine(ShieldPowerDownCoroutine(_timeCoroutine, _shieldCount));
+        }
+        else if(_shieldCount == 2 && _activeCoroutine == 1)
+        {
+            StopAllCoroutines();
+            print("Stopped " + Time.time);
+            _shielVisualizer.SetActive(false);
+            _shielVisualizerMedium.SetActive(true);
+            _shielVisualizerHigh.SetActive(false);
+            _isShieldActive = true;
+            StartCoroutine(ShieldPowerDownCoroutine(_timeCoroutine * 2, _shieldCount));
+
+        }
+        else if(_shieldCount == 3 && _activeCoroutine == 1)
+        {
+            StopAllCoroutines();
+            print("Stopped " + Time.time);
+            _shielVisualizer.SetActive(false);
+            _shielVisualizerMedium.SetActive(false);
+            _shielVisualizerHigh.SetActive(true);
+            _isShieldActive = true;
+            StartCoroutine(ShieldPowerDownCoroutine(_timeCoroutine * 3, _shieldCount));
+        }
+        else
+        {
+            _shieldCount = 0;
+            _activeCoroutine = 0;
+        }
     }
 
-    IEnumerator ShieldPowerDownCoroutine()
+    IEnumerator ShieldPowerDownCoroutine(float wait, int _shielCount)
     {
-        yield return new WaitForSeconds(5.0f);
+      
+        Debug.Log("Started Coroutine at timestamp : " + Time.time + " in _shieldCount = " + _shieldCount + "and _activeCoroutine = " + _activeCoroutine);
+        yield return new WaitForSeconds(wait);
+        Debug.Log("Finished Coroutine at timestamp : " + Time.time + " in _shieldCount = " + _shieldCount);
         _shielVisualizer.SetActive(false);
+        _shielVisualizerMedium.SetActive(false);
+        _shielVisualizerHigh.SetActive(false);
         _isShieldActive = false;
+        _shieldCount = 0;
+        _activeCoroutine = 0;
     }
 
-    public void UpdateScore(int points)
+    public void UpdateScore(int _points)
     {
-        _score += points;
+        _score += _points;
         _uiManager.UpdateScorex(_score);
     }
-    //Create a method to add 10 to the score
-    //Communicate to the UIManager to update the score
+
+    public void ShootCounter()
+    {
+        _uiManager.UpdateShootScore(_bullets);
+    } 
 
     private void OnTriggerEnter2D(Collider2D Other)
     { 
-        if(Other.tag == "Laser")
+        if(Other.tag == "EnemyLaser")
         {
            _countLaser = _countLaser + 1;
-           //Debug.LogError(_countLaser);
            Destroy(Other.gameObject);
     
             if (_countLaser < 2)
@@ -205,12 +299,6 @@ public class Player : MonoBehaviour
         }
 
     }
-
-
-
-
-
-
 
 
 }
