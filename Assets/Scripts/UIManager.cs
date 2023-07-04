@@ -10,7 +10,6 @@ public class UIManager : MonoBehaviour
     private Text _scoreText;
     [SerializeField]
     private Text _laserCounter;
-
     [SerializeField]
     private Image _liveImg;
     [SerializeField]
@@ -21,6 +20,15 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private GameObject _bulletsScoreLabel;
     private bool _bulletLabelCoroutine;
+    [SerializeField]
+    private Slider _thrusterSlider;
+    [SerializeField] 
+    private Image _thrusterSliderFill;
+    [SerializeField]
+    private Text _thrusterText;
+    [SerializeField]
+    private Text _leftShiftText;
+
 
     
     // Start is called before the first frame update
@@ -35,6 +43,18 @@ public class UIManager : MonoBehaviour
         Debug.LogError("GameManager is null");
        }
        _bulletsScoreLabel.gameObject.SetActive(true);
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            _leftShiftText.gameObject.SetActive(true);
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _leftShiftText.gameObject.SetActive(false);
+        }
     }
 
     public void UpdateScorex(int _playerScore)
@@ -96,6 +116,31 @@ public class UIManager : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             yield return null;
         }
+    }
+
+    public void UpdateThrustersSlider(float _thrustValue) // Method to update the Thursters slide.
+    {
+        if(_thrustValue >= 0 && _thrustValue <= 10)
+        {
+            _thrusterSlider.value = _thrustValue;
+        }
+    }
+    public void ThursterSliderUsableColor(bool _usableThrusters)
+    {
+        if (_usableThrusters)
+        {
+            _thrusterSliderFill.color = Color.green;
+        }
+        else if (!_usableThrusters)
+        {
+            _thrusterSliderFill.color = Color.red;
+        }
+    }
+    public void UpdateThrusterScore(float _thrusterScore)
+    {
+        int _truncateThrusterScore = Mathf.RoundToInt(_thrusterScore);
+        _truncateThrusterScore = _truncateThrusterScore * 10;
+        _thrusterText.text = "Thruster "+ _truncateThrusterScore.ToString() + "%";
     }
 
 }

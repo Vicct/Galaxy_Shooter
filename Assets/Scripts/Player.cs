@@ -41,6 +41,25 @@ public class Player : MonoBehaviour
    private float _timeCoroutine = 5.0f;
    private int _activeCoroutine = 1;
    private int _bullets = 15;
+   //Thurster variables
+   [SerializeField]
+   private float _powerupTimeLimit = 5.0f;
+   [SerializeField]
+   private float _powerupThrustersWaitTimeLimit = 3.0f;
+   [SerializeField]
+   private float _thrusterChargeLevelMax = 10.0f;
+   [SerializeField]
+   private float _thrusterChargeLevel;
+   [SerializeField]
+   private float _changeDecreaseThrusterChargeBy = 1.5f;
+   [SerializeField]
+   private float _changeIncreaseThrusterChargeBy = 0.01f;
+   [SerializeField]
+   private bool _canUseThrusters = true;
+   [SerializeField]
+   private bool _thrustersInUse = false;
+   private CameraScript _cameraShake;
+
    
 
     void Start()
@@ -74,6 +93,7 @@ public class Player : MonoBehaviour
         {
             _audioSource.clip = _laserAudio;
         }
+        _cameraShake = GameObject.Find("MainCamera").GetComponent<CameraScript>();
     }
     void Update()
     {
@@ -82,7 +102,25 @@ public class Player : MonoBehaviour
         {
             ShootLaser();
         }
+        ThrustersChargeLevel();
+        ThrustersAcceleration();
     }
+
+    void ThrustersChargeLevel()
+    {
+        _thrusterChargeLevel = Mathf.Clamp(_thrusterChargeLevel, 0, _thrusterChargeLevelMax);
+
+        if (_thrusterChargeLevel <= 0.0f)
+        {
+            _canUseThrusters = false;
+        }
+        else if (_thrusterChargeLevel >= (_thrusterChargeLevelMax/0.75f))
+        {
+            _canUseThrusters = true;
+        }
+    }
+
+
     void Movements ()
     {
         float _HorizontalInput = Input.GetAxis("Horizontal");       
@@ -97,9 +135,28 @@ public class Player : MonoBehaviour
        {
           transform.position = new Vector3(transform.position.x,-5.0f, 0);
        }
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+    }
+
+    void ThrustersAcceleration()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftShift) && _canUseThrusters)
         {
-            SpeedBoostActive();
+            _speed *=_speedMultiplier;
+            _thrustersInUse = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _speed = 3.5f;
+            _thrustersInUse = false;
+        }
+
+        if(_thrustersInUse)
+        {
+            ThrustersActive();
+        }
+        else if(!_thrustersInUse)
+        {
+            StartCoroutine(ThrusterPowerReplenisRoutine());
         }
     }
     void ShootLaser()
@@ -129,6 +186,7 @@ public class Player : MonoBehaviour
                 return;
             }
 
+        _cameraShake.Shake();
         _lives --;
         _uiManager.UpdateLives(_lives);
         _spawnManager.UpdateLives(_lives);
@@ -300,5 +358,39 @@ public class Player : MonoBehaviour
 
     }
 
+    private void ThrustersActive()
+    {
+        if(_canUseThrusters == true)
+        {
+            _thrusterChargeLevel -= Time.deltaTime * _changeDecreaseThrusterChargeBy;
+            _uiManager.UpdateThrustersSlider(_thrusterChargeLevel);// Method to update the Thursters slide.
+            _uiManager.UpdateThrusterScore(_thrusterChargeLevel);
+            Debug.Log("_thrusterChargeLevel  = " + _thrusterChargeLevel);
+            if(_thrusterChargeLevel <= 0)
+            {
+                _uiManager.ThursterSliderUsableColor(false);
+                _thrustersInUse = false;
+                _canUseThrusters = false;
+                _speed = 0; //Resetspeed();
+            }
+        }
+    }
 
+    IEnumerator ThrusterPowerReplenisRoutine()
+    {
+        yield return new WaitForSeconds(_powerupThrustersWaitTimeLimit);
+        while(_thrusterChargeLevel <= _thrusterChargeLevelMax && !_thrustersInUse)
+        {
+            yield return null;
+            _thrusterChargeLevel += Time.deltaTime * _changeIncreaseThrusterChargeBy;
+            _uiManager.UpdateThrustersSlider(_thrusterChargeLevel);
+            _uiManager.UpdateThrusterScore(_thrusterChargeLevel);
+            Debug.Log("_thrusterChargeLevel  :" + _thrusterChargeLevel);
+        }
+        if (_thrusterChargeLevel >= _thrusterChargeLevelMax)
+        {
+            _uiManager.ThursterSliderUsableColor(true);
+            _canUseThrusters = true;
+        }
+    }
 }
