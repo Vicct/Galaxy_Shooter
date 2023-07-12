@@ -66,7 +66,7 @@ public class Power_Up : MonoBehaviour
             {
                 _blastWave.ExplodeBomb();
             }
-            Destroy(this.gameObject, 0.9f);
+            Destroy(this.gameObject, 0.3f);
         }
     }
 }

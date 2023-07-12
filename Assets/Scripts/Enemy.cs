@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
     private AudioSource _audioSource;
 
 
-
     void Start()
     {
         _player = GameObject.Find("Player").GetComponent<Player>();
@@ -37,13 +36,16 @@ public class Enemy : MonoBehaviour
             Debug.LogError("The Enemy Explode is null");
         }
         _audioSource = GetComponent<AudioSource>();
-
     }
 
     void Update()
     {
-        Movement();
+        LaserFire();
+        EnemyVerticalMovement();
+    }
 
+    void LaserFire()
+    {
         if(Time.time > _canFire && this.gameObject != null)
         {
             _fireRate = UnityEngine.Random.Range(3.0f, 7.0f);
@@ -58,15 +60,13 @@ public class Enemy : MonoBehaviour
             }
 
         }
-
-        if(Input.GetKeyDown(KeyCode.D)){BombDestroy();}
-       
     }
 
-    void Movement()
+    void EnemyVerticalMovement()
     {
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
-        if(transform.position.y < -5.0f & _player != null)
+
+        if(transform.position.y < -5.0f & _player != null )
         {
             float randomX = UnityEngine.Random.Range(-8.0f, 8.0f);
             transform.position = new Vector3(randomX,7,0);

@@ -7,7 +7,6 @@ public class CameraScript : MonoBehaviour
     public float _shakeDuration = 0.5f; // Duration of the shake effect
     public float _shakeMagnitude = 0.1f; // Magnitude of the positional shake
     public float _shakeSpeed = 1.0f; // Speed of the shake effect
-
     private Vector3 _originalPosition;
     private float _currentShakeDuration = 0f;
     private float _currentShakeMagnitude = 0f;

@@ -41,9 +41,8 @@ public class Player : MonoBehaviour
    private float _timeCoroutine = 5.0f;
    private int _activeCoroutine = 1;
    private int _bullets = 15;
+   private int _maxBullets;
    //Thurster variables
-   [SerializeField]
-   private float _powerupTimeLimit = 5.0f;
    [SerializeField]
    private float _powerupThrustersWaitTimeLimit = 3.0f;
    [SerializeField]
@@ -94,6 +93,8 @@ public class Player : MonoBehaviour
             _audioSource.clip = _laserAudio;
         }
         _cameraShake = GameObject.Find("MainCamera").GetComponent<CameraScript>();
+
+        _maxBullets = _bullets;
     }
     void Update()
     {
@@ -254,10 +255,12 @@ public class Player : MonoBehaviour
         {
             _bullets = 0;
             _bullets = _bullets + 30;
+            _maxBullets = _maxBullets + 30;
         }
         else
         {
             _bullets = _bullets + 30;
+            _maxBullets = _maxBullets + 30;
         }
     }
 
@@ -312,10 +315,7 @@ public class Player : MonoBehaviour
 
     IEnumerator ShieldPowerDownCoroutine(float wait, int _shielCount)
     {
-      
-        Debug.Log("Started Coroutine at timestamp : " + Time.time + " in _shieldCount = " + _shieldCount + "and _activeCoroutine = " + _activeCoroutine);
         yield return new WaitForSeconds(wait);
-        Debug.Log("Finished Coroutine at timestamp : " + Time.time + " in _shieldCount = " + _shieldCount);
         _shielVisualizer.SetActive(false);
         _shielVisualizerMedium.SetActive(false);
         _shielVisualizerHigh.SetActive(false);
@@ -332,7 +332,7 @@ public class Player : MonoBehaviour
 
     public void ShootCounter()
     {
-        _uiManager.UpdateShootScore(_bullets);
+        _uiManager.UpdateShootScore(_bullets, _maxBullets);
     } 
 
     private void OnTriggerEnter2D(Collider2D Other)
@@ -348,7 +348,6 @@ public class Player : MonoBehaviour
             }
             else if (_countLaser == 2)
             {
-                Debug.LogError("The count is " + _countLaser);
                 _audioSource.clip = _explodeAudio;
                 _audioSource.Play();
                 Damage();
@@ -365,7 +364,6 @@ public class Player : MonoBehaviour
             _thrusterChargeLevel -= Time.deltaTime * _changeDecreaseThrusterChargeBy;
             _uiManager.UpdateThrustersSlider(_thrusterChargeLevel);// Method to update the Thursters slide.
             _uiManager.UpdateThrusterScore(_thrusterChargeLevel);
-            Debug.Log("_thrusterChargeLevel  = " + _thrusterChargeLevel);
             if(_thrusterChargeLevel <= 0)
             {
                 _uiManager.ThursterSliderUsableColor(false);
@@ -385,7 +383,6 @@ public class Player : MonoBehaviour
             _thrusterChargeLevel += Time.deltaTime * _changeIncreaseThrusterChargeBy;
             _uiManager.UpdateThrustersSlider(_thrusterChargeLevel);
             _uiManager.UpdateThrusterScore(_thrusterChargeLevel);
-            Debug.Log("_thrusterChargeLevel  :" + _thrusterChargeLevel);
         }
         if (_thrusterChargeLevel >= _thrusterChargeLevelMax)
         {

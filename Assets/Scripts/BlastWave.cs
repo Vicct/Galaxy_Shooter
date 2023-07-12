@@ -57,7 +57,13 @@ public class BlastWave : MonoBehaviour
             if (_enemy != null)
             {
                 _enemy.BombDestroy();
-            }           
+            }
+            UFOscript _alien = collidedObject.GetComponent<UFOscript>();
+            if (_alien != null)
+            {
+                _alien.BombDestroy();
+            }
+
         }
     }
 

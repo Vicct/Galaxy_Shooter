@@ -27,7 +27,10 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     private Text _thrusterText;
     [SerializeField]
-    private Text _leftShiftText;
+    private Text _waveInfo;
+    [SerializeField]
+    private Text _enemiesInfo;
+
 
 
     
@@ -35,7 +38,7 @@ public class UIManager : MonoBehaviour
     void Start()
     {
        _scoreText.text = "Score:   " +   0;
-       _laserCounter.text = "Bullets:   " +  15;
+       _laserCounter.text = "Bullets:   " + 0 + "/" + 15;
        _gameOverLabel.gameObject.SetActive(false);
        _gameManager = GameObject.Find("GameManager").GetComponent<GameManagers>();
        if(_gameManager == null)
@@ -45,49 +48,36 @@ public class UIManager : MonoBehaviour
        _bulletsScoreLabel.gameObject.SetActive(true);
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            _leftShiftText.gameObject.SetActive(true);
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            _leftShiftText.gameObject.SetActive(false);
-        }
-    }
-
     public void UpdateScorex(int _playerScore)
     {
         _scoreText.text = "Score:   " + _playerScore.ToString();
     }
 
-    public void UpdateShootScore(int _bulletsScore)
+    public void UpdateShootScore(int _bulletsScore, int _maxBullets)
     {
         if (_bulletsScore <= 0)
         {
            _bulletsScore = 0;
-           _laserCounter.text = "Bullets:   " + _bulletsScore.ToString();
+           _laserCounter.text = "Bullets:   " + _bulletsScore.ToString() + "/" + _maxBullets.ToString();
            StartCoroutine(BulletsOverCoroutine ());
         }
         else
         {
             _bulletLabelCoroutine = false;
-            _laserCounter.text = "Bullets:   " + _bulletsScore.ToString();
+            _laserCounter.text = "Bullets:   " + _bulletsScore.ToString() + "/" + _maxBullets.ToString();
         }
     }
 
     public void UpdateLives(int currentLives)
     {
         _liveImg.sprite = _liveSprites[currentLives];
-        Debug.Log("Current Lives  :" + currentLives );
         if (currentLives <= 0)
         {
             GameOverSequence();
         }
     }
 
-    private void GameOverSequence()
+    public void GameOverSequence()
     {
         _gameOverLabel.gameObject.SetActive(true);
         _gameManager.GameOver();
@@ -141,6 +131,16 @@ public class UIManager : MonoBehaviour
         int _truncateThrusterScore = Mathf.RoundToInt(_thrusterScore);
         _truncateThrusterScore = _truncateThrusterScore * 10;
         _thrusterText.text = "Thruster "+ _truncateThrusterScore.ToString() + "%";
+    }
+
+    public void WaveUpdate(int _waveNumber)
+    {
+        _waveInfo.text = "Wave:   " + _waveNumber.ToString();
+    }
+
+    public void EnemyCount(int i, int _enemyCount)
+    {
+        _enemiesInfo.text = "Enemies:   " + i.ToString() + "/" + _enemyCount.ToString();
     }
 
 }
