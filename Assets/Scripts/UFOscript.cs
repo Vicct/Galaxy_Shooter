@@ -50,8 +50,6 @@ public class UFOscript : MonoBehaviour
         {
             _attackDirection = 1;
         }
-        //_ufoLaser = GameObject.Find("Lasser").GetComponent<Lasser>();
-
     }
 
     void Update()

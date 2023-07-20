@@ -6,8 +6,8 @@ public class Player : MonoBehaviour
 
    [SerializeField]
    private float _speed = 3.5f;
-   private float _speedMultiplier = 2.0f;
-   private float _turboSpeedMultiplier = 4.0f;
+   private float _speedMultiplier = 3.0f;
+   private float _turboSpeedMultiplier = 6.0f;
    [SerializeField]
    private GameObject _laserPrefab; 
    [SerializeField]
@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
    [SerializeField]
    private bool _thrustersInUse = false;
    private CameraScript _cameraShake;
+   [SerializeField]
+   private GameObject _shielCryptoEffectVisualizer;
 
    
 
@@ -95,6 +97,7 @@ public class Player : MonoBehaviour
         _cameraShake = GameObject.Find("MainCamera").GetComponent<CameraScript>();
 
         _maxBullets = _bullets;
+        _shielCryptoEffectVisualizer.SetActive(false);
     }
     void Update()
     {
@@ -105,6 +108,7 @@ public class Player : MonoBehaviour
         }
         ThrustersChargeLevel();
         ThrustersAcceleration();
+        DetectCrypto();
     }
 
     void ThrustersChargeLevel()
@@ -388,6 +392,23 @@ public class Player : MonoBehaviour
         {
             _uiManager.ThursterSliderUsableColor(true);
             _canUseThrusters = true;
+        }
+    }
+
+    private void DetectCrypto()
+    {
+        GameObject _kryptogameobject = GameObject.Find("Crypto_Rock Variant(Clone)");
+        if (_kryptogameobject == null)
+        {
+            _speed = 3.5f;
+            _fireRate = 0.5f;
+            _shielCryptoEffectVisualizer.SetActive(false);
+        }
+        else
+        {
+            _speed = 0.5f;
+            _fireRate = 1.5f;
+            _shielCryptoEffectVisualizer.SetActive(true);
         }
     }
 }

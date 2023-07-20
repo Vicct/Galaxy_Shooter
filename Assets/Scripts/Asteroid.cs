@@ -20,8 +20,7 @@ public class Asteroid : MonoBehaviour
     void Update()
     {
         transform.Rotate(Vector3.forward * _rotateSpeed * Time.deltaTime);
-        //detect laser collision
-        //instantiate an explosion
+
     }
 
     private void OnTriggerEnter2D(Collider2D Other)
