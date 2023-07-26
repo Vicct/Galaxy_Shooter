@@ -20,6 +20,11 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private AudioClip _explodeAudio;
     private AudioSource _audioSource;
+    [SerializeField]
+    private GameObject _enemyShield;
+    private float _shieldEnable = 0;
+    private float _shieldRate = 2.0f;
+    private bool _isEnemyShieldActive;
 
 
     void Start()
@@ -36,12 +41,14 @@ public class Enemy : MonoBehaviour
             Debug.LogError("The Enemy Explode is null");
         }
         _audioSource = GetComponent<AudioSource>();
+        _enemyShield.SetActive(false);
     }
 
     void Update()
     {
         LaserFire();
         EnemyVerticalMovement();
+        EnemyShield();
     }
 
     void LaserFire()
@@ -75,31 +82,43 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D Other)
     {
-        
+
         if(Other.tag == "Player")
         {
             //Player player = Other.transform.GetComponent<Player>();
             if (_player != null)
             {
-                _player.Damage();  
+                _player.Damage();
+                _audioSource.clip = _explodeAudio;
+                _audioSource.Play();  
             }
             
-            _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
-            _speed = 0.0f;
-            _audioSource.clip = _explodeAudio;
-            _audioSource.Play();
-            Destroy(GetComponent<Collider2D>());
-            
-            Destroy(this.gameObject, 2.8f);
+            if (_isEnemyShieldActive == true)
+            {
+                return;
+            }
+            else
+            {
+                _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
+                _speed = 0.0f;
+                _audioSource.clip = _explodeAudio;
+                _audioSource.Play();
+                Destroy(GetComponent<Collider2D>());
+                Destroy(this.gameObject, 2.8f);
+            }
         }
         else if (Other.tag == "Laser")
         {
+            if(_isEnemyShieldActive == true)
+            {
+                Destroy(Other.gameObject);
+                return;
+            }
             if(_player != null)
                 {
                     //player.UpdateScore(); //it does not work - Object reference not set to an instance of an object.
                     _player.UpdateScore(10); //Question about the reference to an object.
                 }
-            
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
             _audioSource.clip = _explodeAudio;
@@ -124,5 +143,23 @@ public class Enemy : MonoBehaviour
         _audioSource.Play();
         Destroy(GetComponent<Collider2D>());
         Destroy(this.gameObject, 1.3f);
+    }
+
+    void EnemyShield()
+    {
+        if(Time.time > _shieldEnable && this.gameObject != null)
+        {
+            _shieldRate = UnityEngine.Random.Range(1.0f, 3.0f);
+            _shieldEnable = Time.time + _shieldRate;
+            _enemyShield.SetActive(true);
+            StartCoroutine(ShieldActive());
+            _isEnemyShieldActive = true;
+        }
+    }
+    IEnumerator ShieldActive()
+    {
+        yield return new WaitForSeconds(4.0f);
+        _enemyShield.SetActive(false);
+        _isEnemyShieldActive = false;
     }
 }
