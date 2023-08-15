@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6045862195813203095}
   m_Layer: 0
   m_Name: Bomb_Power_Up
-  m_TagString: Untagged
+  m_TagString: PowerUps
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

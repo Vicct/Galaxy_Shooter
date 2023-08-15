@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 613273724164688741}
   - component: {fileID: 613273724164688740}
   - component: {fileID: 2718020702044604116}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: speed_Powerup
-  m_TagString: Untagged
+  m_TagString: PowerUps
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,7 @@ MonoBehaviour:
   _powerUpID: 1
   _powerUpaudioclip: {fileID: 8300000, guid: 5ee343246919d2b4bba63ae629e95494, type: 3}
   _explosionPrefab: {fileID: 8210638093207429773, guid: d68922990564a5e41b9e1789fb22b8e5, type: 3}
+  _originOffset: 0.2
 --- !u!50 &613273724164688741
 Rigidbody2D:
   serializedVersion: 4

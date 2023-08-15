@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5620486176410831108}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: tripleShot
   m_TagString: Laser
   m_Icon: {fileID: 0}
@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8436597371779835670}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.98887986, y: -2.6101136, z: 0}
+  m_LocalPosition: {x: -3.0428908, y: -1.113236, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -88,6 +88,10 @@ PrefabInstance:
     - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
       propertyPath: m_Name
       value: Lasser _2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
       propertyPath: m_TagString
@@ -156,6 +160,10 @@ PrefabInstance:
       value: Lasser
       objectReference: {fileID: 0}
     - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
+      propertyPath: m_Layer
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
       propertyPath: m_TagString
       value: Laser
       objectReference: {fileID: 0}
@@ -220,6 +228,10 @@ PrefabInstance:
     - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
       propertyPath: m_Name
       value: Lasser_1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
+      propertyPath: m_Layer
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 6082478267529673831, guid: 11a6c9cd8e910f647bedbafba056914d, type: 3}
       propertyPath: m_TagString

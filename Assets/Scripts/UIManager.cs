@@ -30,10 +30,12 @@ public class UIManager : MonoBehaviour
     private Text _waveInfo;
     [SerializeField]
     private Text _enemiesInfo;
+    [SerializeField]
+    private Text _keyCPressedText;
 
-
-
-    
+    [SerializeField]
+    private Text _keyMPressedText;
+   
     // Start is called before the first frame update
     void Start()
     {
@@ -46,6 +48,9 @@ public class UIManager : MonoBehaviour
         Debug.LogError("GameManager is null");
        }
        _bulletsScoreLabel.gameObject.SetActive(true);
+       //temporal
+       _keyCPressedText.gameObject.SetActive(false);
+       _keyMPressedText.gameObject.SetActive(false);
     }
 
     public void UpdateScorex(int _playerScore)
@@ -141,6 +146,26 @@ public class UIManager : MonoBehaviour
     public void EnemyCount(int i, int _enemyCount)
     {
         _enemiesInfo.text = "Enemies:   " + i.ToString() + "/" + _enemyCount.ToString();
+    }
+
+    public void KeyCPressed()
+    {
+        _keyCPressedText.gameObject.SetActive(true);
+    }
+
+    public void KeyCPressedDone()
+    {
+        _keyCPressedText.gameObject.SetActive(false);
+    }
+
+    public void KeyXPressed()
+    {
+        _keyMPressedText.gameObject.SetActive(true);
+    }
+
+    public void KeyXPressedDone()
+    {
+        _keyMPressedText.gameObject.SetActive(false);
     }
 
 }

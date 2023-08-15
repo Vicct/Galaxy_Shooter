@@ -25,6 +25,18 @@ public class Enemy : MonoBehaviour
     private float _shieldEnable = 0;
     private float _shieldRate = 2.0f;
     private bool _isEnemyShieldActive;
+    //Ram variables
+    private float _distance;
+    private Vector3 _direction;
+    private float _attackRange = 2.0f; 
+    private float _ramSpeedMultiplier = 1.2f;
+    //Health destroy
+    private GameObject _healthPowerUp;
+    private float _originOffset = 1.0f;
+    private float _raycastMaxDistance = 5.0f;
+    private float _distanceToLaser;
+    private float _defenseRange = 3.0f;
+    private Vector3 _avoidDirection;
 
 
     void Start()
@@ -46,9 +58,13 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        LaserFire();
+        //LaserFire();
         EnemyVerticalMovement();
         EnemyShield();
+        EnemyRam();
+        HealthDestroy();
+        SmartShoot();
+        AvoidLaser();
     }
 
     void LaserFire()
@@ -65,7 +81,6 @@ public class Enemy : MonoBehaviour
                 _audioSource.clip = _laserAudio;
                 _audioSource.Play();
             }
-
         }
     }
 
@@ -81,8 +96,7 @@ public class Enemy : MonoBehaviour
     }
 
     void OnTriggerEnter2D(Collider2D Other)
-    {
-
+    {   
         if(Other.tag == "Player")
         {
             //Player player = Other.transform.GetComponent<Player>();
@@ -116,8 +130,7 @@ public class Enemy : MonoBehaviour
             }
             if(_player != null)
                 {
-                    //player.UpdateScore(); //it does not work - Object reference not set to an instance of an object.
-                    _player.UpdateScore(10); //Question about the reference to an object.
+                    _player.UpdateScore(10); 
                 }
             _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             _speed = 0.0f;
@@ -127,7 +140,21 @@ public class Enemy : MonoBehaviour
             Destroy(this.gameObject, 1.3f);
             Destroy(Other.gameObject);
         }
-
+        else if (Other.gameObject.name == "Missile(Clone)")
+        {
+            if(_player != null)
+            {
+                _player.UpdateScore(10); 
+            }
+            _EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
+            _speed = 0.0f;
+            _audioSource.clip = _explodeAudio;
+            _audioSource.Play();
+            Destroy(GetComponent<Collider2D>());
+            Destroy(this.gameObject, 1.3f);
+            Destroy(Other.gameObject);
+        }
+    
     }
 
     public void BombDestroy()
@@ -162,4 +189,118 @@ public class Enemy : MonoBehaviour
         _enemyShield.SetActive(false);
         _isEnemyShieldActive = false;
     }
+
+    void EnemyRam()
+    {
+        if(_player != null)
+        {
+            _distance = Vector3.Distance(_player.transform.position, this.transform.position);
+
+            if (_distance <= _attackRange)
+            {
+                _direction = this.transform.position - _player.transform.position;
+                _direction = _direction.normalized;
+                this.transform.position -= _direction * Time.deltaTime * (_speed * _ramSpeedMultiplier);
+            }
+        }
+    }
+
+    void SmartShoot()
+    {
+        if(_player !=null)
+        {
+            Vector3 _playerPosition = _player.transform.position;
+            _direction = this.transform.position - _player.transform.position;
+            bool _playerDetectedInFront = Vector3.Dot(transform.up, _direction) > 0.0f;
+            if(Time.time > _canFire && this.gameObject != null)
+            {
+                _fireRate = UnityEngine.Random.Range(3.0f, 7.0f);     
+                _canFire = Time.time + _fireRate;
+
+                if (_playerDetectedInFront)
+                {
+
+                    GameObject enemyLaser = Instantiate(_enemyLaserPrefab,new Vector3(transform.position.x - 0.185f,transform.position.y - 0.05f,0), Quaternion.identity);
+                    Lasser[] lassers = enemyLaser.GetComponentsInChildren<Lasser>();
+                    for( int i = 0; i < lassers.Length; i++ )
+                    {
+                        lassers[i].AssignEnemyLaser();
+                        _audioSource.clip = _laserAudio;        
+                        _audioSource.Play();
+                    }
+
+                }
+                else
+                {
+                    GameObject enemyLaser = Instantiate(_enemyLaserPrefab,new Vector3(transform.position.x - 0.17f,transform.position.y + 1.75f,0), Quaternion.identity);
+                    enemyLaser.GetComponentsInChildren<Lasser>();
+                    _audioSource.clip = _laserAudio;
+                    _audioSource.Play();
+                }
+            }
+        }
+    }
+
+    void HealthDestroy()
+    {
+        _healthPowerUp = GameObject.Find("Health_Powerup(Clone)");
+        if(_healthPowerUp != null && this.gameObject != null)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y - _originOffset), Vector2.down, _raycastMaxDistance);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y - _originOffset), Vector2.down*_raycastMaxDistance, Color.red);
+            
+            if (hit.collider != null && hit.collider.gameObject.name == _healthPowerUp.name && Time.time > _canFire)
+            {
+                _fireRate = UnityEngine.Random.Range(1.0f, 3.0f);     
+                _canFire = Time.time + _fireRate;
+                
+                Debug.Log("hit  :" + hit.collider.gameObject.name + "_healthPowerUp  :"  + _healthPowerUp.name);
+                Debug.Log("Time.time > _canFire  :" + _canFire);
+
+                GameObject enemyLaser = Instantiate(_enemyLaserPrefab,new Vector3(transform.position.x - 0.185f,transform.position.y - 0.05f,0), Quaternion.identity);
+                Lasser[] lassers = enemyLaser.GetComponentsInChildren<Lasser>();
+                for( int i = 0; i < lassers.Length; i++ )
+                {
+                    lassers[i].AssignEnemyLaser();
+                    _audioSource.clip = _laserAudio;        
+                    _audioSource.Play();
+                }
+            }
+
+            RaycastHit2D hitback = Physics2D.Raycast(new Vector2(transform.position.x, transform.position.y + _originOffset), Vector2.up, _raycastMaxDistance);
+            Debug.DrawRay(new Vector2(transform.position.x, transform.position.y + _originOffset), Vector2.up*_raycastMaxDistance, Color.blue);
+            
+            if (hitback.collider != null && hitback.collider.gameObject == _healthPowerUp && Time.time > _canFire)
+            {
+                _fireRate = UnityEngine.Random.Range(1.0f, 3.0f);     
+                _canFire = Time.time + _fireRate;
+                
+                Debug.Log("hitback  :" + hitback.collider.gameObject.name);
+                Debug.Log("Time.time > _canFire  :" + _canFire);
+
+                GameObject enemyLaser = Instantiate(_enemyLaserPrefab,new Vector3(transform.position.x - 0.17f,transform.position.y + 1.75f,0), Quaternion.identity);
+                enemyLaser.GetComponentsInChildren<Lasser>();
+                _audioSource.clip = _laserAudio;
+                _audioSource.Play();
+                
+            }
+        }
+    }
+
+    void AvoidLaser()
+    {
+        GameObject _laser = GameObject.Find("Lasser(Clone)");
+        if(_laser != null)
+        {
+            _distanceToLaser = Vector3.Distance(_laser.transform.position, this.transform.position);
+
+            if (_distanceToLaser <= _defenseRange)
+            {
+                _avoidDirection = this.transform.position - _laser.transform.position;
+                _avoidDirection = _avoidDirection.normalized;
+                this.transform.position += _avoidDirection * Time.deltaTime * (_speed * 3);
+            }
+        }
+    }
 }
+

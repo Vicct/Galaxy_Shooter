@@ -88,7 +88,6 @@ public class UFOscript : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D Other)
     {
-        
         if(Other.tag == "Player")
         {
             if (_player != null)
@@ -108,11 +107,8 @@ public class UFOscript : MonoBehaviour
         {
             if(_player != null)
                 {
-                    //player.UpdateScore(); //it does not work - Object reference not set to an instance of an object.
-                    _player.UpdateScore(20); //Question about the reference to an object.
+                    _player.UpdateScore(20); 
                 }
-            
-            //_EnemyExplodeAnim.SetTrigger("OnEnemyDeath");
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             _speed = 0.0f;
             _audioSource.clip = _explodeAudio;
@@ -120,6 +116,20 @@ public class UFOscript : MonoBehaviour
             Destroy(GetComponent<Collider2D>());
             Destroy(this.gameObject);
             Destroy(Other.gameObject);
+        }
+        else if (Other.gameObject.name == "Missile(Clone)")
+        {
+            if(_player != null)
+            {
+                _player.UpdateScore(20);
+            }
+            Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
+            _speed = 0.0f;
+            _audioSource.clip = _explodeAudio;
+            _audioSource.Play();
+            Destroy(GetComponent<Collider2D>()); //Destroy component collider
+            Destroy(this.gameObject); //Enemy destroy
+            Destroy(Other.gameObject); //Missile Destroy
         }
 
     }

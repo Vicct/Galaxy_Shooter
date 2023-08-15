@@ -9,6 +9,9 @@ TagManager:
   - Enemy
   - Bomb
   - EnemyLaser
+  - HealthPowerUp
+  - PowerUps
+  - Missile
   layers:
   - Default
   - TransparentFX
@@ -17,10 +20,10 @@ TagManager:
   - Water
   - UI
   - PostProcessing
+  - _playerLayer
+  - _powerUpLayer
   - 
-  - 
-  - 
-  - 
+  - _healthLayer
   - 
   - 
   - 

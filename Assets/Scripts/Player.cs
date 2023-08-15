@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -61,7 +62,16 @@ public class Player : MonoBehaviour
    [SerializeField]
    private GameObject _shielCryptoEffectVisualizer;
 
-   
+
+   [SerializeField]
+   private GameObject _missile; 
+   [SerializeField]
+   private int _missiles = 5;
+   [SerializeField]
+   private AudioClip __missileAudio;
+   private AudioSource _missileAudioSource;
+   private bool isMissileTrue = false;
+
 
     void Start()
     {
@@ -98,6 +108,7 @@ public class Player : MonoBehaviour
 
         _maxBullets = _bullets;
         _shielCryptoEffectVisualizer.SetActive(false);
+
     }
     void Update()
     {
@@ -109,6 +120,30 @@ public class Player : MonoBehaviour
         ThrustersChargeLevel();
         ThrustersAcceleration();
         DetectCrypto();
+
+        //temporal
+        if(Input.GetKeyDown(KeyCode.C))
+        {
+            _uiManager.KeyCPressed();
+        }
+        if(Input.GetKeyUp(KeyCode.C))
+        {
+            _uiManager.KeyCPressedDone();
+        }
+        //temporal
+        if(Input.GetKeyDown(KeyCode.X))
+        {
+            _uiManager.KeyXPressed();
+        }
+        if(Input.GetKeyUp(KeyCode.X))
+        {
+            _uiManager.KeyXPressedDone();
+        }
+
+        if(Input.GetKeyDown(KeyCode.X) && isMissileTrue == true)
+        {
+            ShootMissile();
+        }
     }
 
     void ThrustersChargeLevel()
@@ -411,4 +446,29 @@ public class Player : MonoBehaviour
             _shielCryptoEffectVisualizer.SetActive(true);
         }
     }
+
+    public void ShootMissileKey()
+    {
+        isMissileTrue = true;
+        _missiles = 5;        
+    }
+
+    private void ShootMissile()
+    {  
+        if (_missiles >= 1)
+        {
+            Instantiate(_missile, _missile.transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, 0), Quaternion.identity);
+            //_missileInstantiation.transform.rotation = Quaternion.Euler(0f,90f,90f);
+            _missiles = _missiles - 1;
+    
+        }
+        else if(_missiles == 0)
+        {
+            isMissileTrue = false;
+        }
+        _audioSource.clip = __missileAudio;
+        _audioSource.Play();
+
+    }
+
 }
