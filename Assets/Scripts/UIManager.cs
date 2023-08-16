@@ -35,6 +35,8 @@ public class UIManager : MonoBehaviour
 
     [SerializeField]
     private Text _keyMPressedText;
+    [SerializeField]
+    private Text _missilesCounter;
    
     // Start is called before the first frame update
     void Start()
@@ -166,6 +168,11 @@ public class UIManager : MonoBehaviour
     public void KeyXPressedDone()
     {
         _keyMPressedText.gameObject.SetActive(false);
+    }
+
+    public void MissilesUpdate(int _missilesNumber)
+    {
+        _missilesCounter.text = "Missiles:  " + _missilesNumber.ToString() + "/5";
     }
 
 }

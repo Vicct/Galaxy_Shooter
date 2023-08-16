@@ -26,7 +26,7 @@ public class Lasser : MonoBehaviour
     void MoveUp ()
     {
         transform.Translate(Vector3.up * _laserSpeed * Time.deltaTime);
-        if (transform.position.y >= 8.0f || transform.position.x > 7.0f || transform.position.x < -7.0)
+        if (transform.position.y >= 8.0f || transform.position.x > 10.0f || transform.position.x < -10.0)
         {     
             if(transform.parent != null)
             {
@@ -40,7 +40,7 @@ public class Lasser : MonoBehaviour
     {
         transform.Translate(Vector3.down * _laserSpeed * Time.deltaTime);
 
-        if (transform.position.y < -8.0f || transform.position.x > 7.0f || transform.position.x < -7.0)
+        if (transform.position.y < -8.0f || transform.position.x > 10.0f || transform.position.x < -10.0)
         {     
             if(transform.parent != null)
             {

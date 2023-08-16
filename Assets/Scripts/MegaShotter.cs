@@ -125,7 +125,7 @@ public class MegaShotter : MonoBehaviour
                 _laserRigidbody.AddForce(direction * _shootForce, ForceMode2D.Impulse);
             }
 
-            if (_laser.transform.position.y >= 8.0f || _laser.transform.position.x <= -8.0f || _laser.transform.position.x >= 8.0f)
+            if (_laser.transform.position.y >= 8.0f || _laser.transform.position.x <= -10.0f || _laser.transform.position.x >= 10.0f)
             {     
                 if(transform.parent != null)
                 {

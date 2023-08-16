@@ -5,10 +5,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
 
-   [SerializeField]
-   private float _speed = 3.5f;
-   private float _speedMultiplier = 3.0f;
-   private float _turboSpeedMultiplier = 6.0f;
+   //[SerializeField]
+   private float _speed;
+   private float _speedPower = 4.0f;
+   private float _speedMultiplier = 3.0f;   
    [SerializeField]
    private GameObject _laserPrefab; 
    [SerializeField]
@@ -108,6 +108,7 @@ public class Player : MonoBehaviour
 
         _maxBullets = _bullets;
         _shielCryptoEffectVisualizer.SetActive(false);
+        _speed = _speedPower;
 
     }
     void Update()
@@ -181,12 +182,12 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftShift) && _canUseThrusters)
         {
-            _speed *=_speedMultiplier;
+            _speed = _speedPower * _speedMultiplier;
             _thrustersInUse = true;
         }
         else if (Input.GetKeyUp(KeyCode.LeftShift))
         {
-            _speed = 3.5f;
+            _speed = _speedPower;
             _thrustersInUse = false;
         }
 
@@ -228,8 +229,6 @@ public class Player : MonoBehaviour
 
         _cameraShake.Shake();
         _lives --;
-        _uiManager.UpdateLives(_lives);
-        _spawnManager.UpdateLives(_lives);
         if(_lives == 2)
             {
                 _rightDamage.SetActive(true);
@@ -239,12 +238,15 @@ public class Player : MonoBehaviour
                 _leftDamage.SetActive(true);
             }
 
-        if (_lives == 0)
+        if (_lives <= 0)
         {         
+            _lives = 0;
             _spawnManager.OnPlayerDeath();
             Instantiate(_explosionPrefab, transform.position, Quaternion.identity);
             Destroy(this.gameObject,0.3f);
         }
+        _uiManager.UpdateLives(_lives);
+        _spawnManager.UpdateLives(_lives);
         
     }
 
@@ -279,14 +281,11 @@ public class Player : MonoBehaviour
     public void SpeedBoostActive()
     {
        //_isSpeedBoostActive = true;
-       _speed *=_speedMultiplier;
+       _speed = _speedPower *_speedMultiplier;
+       Debug.Log("_speed  :" + _speed);
        StartCoroutine(SpeedBoostPowerDownCoroutine());
     }
 
-    void TurboSpeedBoostActive()
-    {
-       _speed *=_turboSpeedMultiplier;
-    }
 
     public void BulletsRefill()
     {
@@ -306,7 +305,8 @@ public class Player : MonoBehaviour
     IEnumerator SpeedBoostPowerDownCoroutine()
     {
         yield return new WaitForSeconds(5.0f);
-        _speed /=_speedMultiplier;
+        _speed = _speedPower /_speedMultiplier;
+        Debug.Log("_speed after :" + _speed);
         //_isSpeedBoostActive = false;
     }
 
@@ -435,13 +435,12 @@ public class Player : MonoBehaviour
         GameObject _kryptogameobject = GameObject.Find("Crypto_Rock Variant(Clone)");
         if (_kryptogameobject == null)
         {
-            _speed = 3.5f;
             _fireRate = 0.5f;
             _shielCryptoEffectVisualizer.SetActive(false);
         }
         else
-        {
-            _speed = 0.5f;
+        {       
+            _speed = _speedPower/2;
             _fireRate = 1.5f;
             _shielCryptoEffectVisualizer.SetActive(true);
         }
@@ -450,7 +449,8 @@ public class Player : MonoBehaviour
     public void ShootMissileKey()
     {
         isMissileTrue = true;
-        _missiles = 5;        
+        _missiles = 5;
+        _uiManager.MissilesUpdate(_missiles);        
     }
 
     private void ShootMissile()
@@ -460,7 +460,7 @@ public class Player : MonoBehaviour
             Instantiate(_missile, _missile.transform.position = new Vector3(transform.position.x, transform.position.y + 0.3f, 0), Quaternion.identity);
             //_missileInstantiation.transform.rotation = Quaternion.Euler(0f,90f,90f);
             _missiles = _missiles - 1;
-    
+            _uiManager.MissilesUpdate(_missiles); 
         }
         else if(_missiles == 0)
         {

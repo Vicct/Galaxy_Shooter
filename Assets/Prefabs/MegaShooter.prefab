@@ -124,19 +124,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af8afff0c880a794b858d3a02af49948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _centerPoint: {x: 0, y: 0, z: 0}
-  _centerPointDisplacement: {x: 0, y: 0, z: 0}
-  _circularRadius: 7
-  _angularSpeed: 0.5
-  _stopDuration: 9
-  _stopTimer: 0
-  _stopVerticalDownTimer: 0
-  _stopVerticalUpTimer: 0
-  _rotationSpeed: 0.5
   _laserPrefab: {fileID: 7280255550311180197, guid: 5ad99b4f58230b0468dab647dea1998e, type: 3}
   _shootForce: 1
-  _numberOfLasers: 16
-  _angleShot: 180
+  _numberOfLasers: 32
+  _angleShot: 360
 --- !u!33 &699825441007139911
 MeshFilter:
   m_ObjectHideFlags: 0
