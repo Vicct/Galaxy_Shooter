@@ -129,22 +129,6 @@ public class SpawnManager : MonoBehaviour
                     _stopWave = true;        
                 }
                 yield return new WaitForSeconds(10.0f);
-                
-                if(_currentWaveIndex == _waves.Length && _childCount == 0)
-                {
-                    Debug.Log("_currentWaveIndex   :"+  _currentWaveIndex);
-                    Debug.Log("_waves.Length   :"+  _waves.Length);
-                    Vector3 _enemyMegaPos = new Vector3(0.0f,8.0f,0f);
-                    GameObject _newMegaEnemy = Instantiate(_enemyPrefab[2], _enemyMegaPos, Quaternion.identity);
-                    _newMegaEnemy.transform.parent = EnemyContainer.transform;
-                }
-
-                if(_enemyPrefab[2] == null)
-                {
-                    _uimanager.GameOverSequence();
-                    _stopSpawning = true;
-                    _stopWave = true;  
-                }
             }
         }
     }
