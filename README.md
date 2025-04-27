@@ -9,7 +9,7 @@ It complements a series of Unity game development articles published by [Victor 
 
 ---
 
-## 📰 Related Articles on Medium
+##  Related Articles on Medium
 
 You can deepen your learning with these Unity-focused articles:
 
@@ -25,11 +25,11 @@ You can deepen your learning with these Unity-focused articles:
 - Hosting Unity Games on the Web
 - And many more!
 
-📚 Full article list: [Victor's Medium Profile](https://medium.com/@victormct)
+ Full article list: [Victor's Medium Profile](https://medium.com/@victormct)
 
 ---
 
-## 🛠️ Getting Started
+##  Getting Started
 
 1. Clone this repository.
 2. Open the project using **Unity 2021.3.24f1**.
@@ -38,7 +38,7 @@ You can deepen your learning with these Unity-focused articles:
 
 ---
 
-## ✨ Features
+##  Features
 
 -  2D spaceship movement and shooting
 -  Enemy spawning and AI
@@ -49,7 +49,7 @@ You can deepen your learning with these Unity-focused articles:
 
 ---
 
-## 🧠 Learning Goals
+##  Learning Goals
 
 - Understand Unity scene setup
 - Learn C# scripting basics in Unity
@@ -59,11 +59,11 @@ You can deepen your learning with these Unity-focused articles:
 
 ---
 
-## 📜 License
+##  License
 
 This project is provided for educational purposes only.  
 Feel free to fork, modify, and build upon it as part of your Unity learning journey!
 
 ---
 
-Happy coding and keep creating! 🚀🎮
+Happy coding and keep creating! 
